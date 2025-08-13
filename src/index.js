@@ -4,6 +4,7 @@ import express from "express";
 
 import connectDB from "./utils/db.js";
 
+import authRouter from "./routes/auth.route.js";
 import healthCheckRouter from "./routes/healthcheck.route.js";
 
 const PORT = process.env.PORT || 5432;
@@ -22,6 +23,7 @@ app.use(express.static("public")); // serve static files
 app.use(express.urlencoded({ extended: false, limit: "16kb" }));
 
 app.use("/api/v1/healthcheck", healthCheckRouter);
+app.use("/api/v1/auth", authRouter);
 
 app.get("/", (req, res) => {
   res.send("Starting a backend project");
