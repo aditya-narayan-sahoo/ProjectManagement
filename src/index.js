@@ -1,7 +1,7 @@
 import "dotenv/config";
 import cors from "cors";
 import express from "express";
-
+import cookieParser from "cookie-parser";
 import connectDB from "./utils/db.js";
 
 import authRouter from "./routes/auth.route.js";
@@ -10,6 +10,10 @@ import healthCheckRouter from "./routes/healthcheck.route.js";
 const PORT = process.env.PORT || 5432;
 
 const app = express();
+app.use(express.json({ limit: "16kb" }));
+app.use(express.static("public")); // serve static files
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: false, limit: "16kb" }));
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN?.split(",") || "http://localhost:3000",
@@ -18,9 +22,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
-app.use(express.json({ limit: "16kb" }));
-app.use(express.static("public")); // serve static files
-app.use(express.urlencoded({ extended: false, limit: "16kb" }));
 
 app.use("/api/v1/healthcheck", healthCheckRouter);
 app.use("/api/v1/auth", authRouter);
